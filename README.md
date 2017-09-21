@@ -1,5 +1,7 @@
 # Sequelize Cursor Pagination
 
+[![Build Status](https://travis-ci.org/Kaltsoon/sequelize-cursor-pagination.svg?branch=master)](https://travis-ci.org/Kaltsoon/sequelize-cursor-pagination)
+
 Sequelize model decorator which provides cursor based pagination queries. [Some motivation and background](https://dev-blog.apollodata.com/understanding-pagination-rest-graphql-and-relay-b10f835549e7).
 
 ## Install
@@ -46,7 +48,7 @@ Counter.paginate({
 
 The ``paginate`` method returns an object with following properties:
 
-* **result**, the result of the query
+* **results**, the results of the query
 * **cursors**, object containing the cursors' related data
   * **cursors.before**, the first record in the result serialized
   * **cursors.after**, the last record in the result serialized

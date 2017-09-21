@@ -63,15 +63,15 @@ function withPagination({ methodName = 'paginate', primaryKeyField = 'id' } = {}
           cursorOrderIsDesc ? [paginationField, 'DESC'] : paginationField,
           ...(paginationFieldIsNonId ? [primaryKeyField] : []),
         ],
-      }).then(result => {
-        const hasMore = result.length > limit;
+      }).then(results => {
+        const hasMore = results.length > limit;
   
         if (hasMore) {
-          result.pop();
+          results.pop();
         }
 
         if (before) {
-          result.reverse();
+          results.reverse();
         }
   
         const hasNext = !!before || hasMore;
@@ -80,18 +80,18 @@ function withPagination({ methodName = 'paginate', primaryKeyField = 'id' } = {}
         let beforeCursor = null;
         let afterCursor = null;
 
-        if (result.length > 0) {
+        if (results.length > 0) {
           beforeCursor = paginationFieldIsNonId 
-            ? encodeCursor([result[0][paginationField], result[0][primaryKeyField]])
-            : encodeCursor([result[0][paginationField]]);
+            ? encodeCursor([results[0][paginationField], results[0][primaryKeyField]])
+            : encodeCursor([results[0][paginationField]]);
 
           afterCursor = paginationFieldIsNonId
-            ? encodeCursor([result[result.length - 1][paginationField], result[result.length - 1][primaryKeyField]])
-            : encodeCursor([result[result.length - 1][paginationField]]);
+            ? encodeCursor([results[results.length - 1][paginationField], results[results.length - 1][primaryKeyField]])
+            : encodeCursor([results[results.length - 1][paginationField]]);
         }
 
         return {
-          result,
+          results,
           cursors: {
             hasNext,
             hasPrevious,
