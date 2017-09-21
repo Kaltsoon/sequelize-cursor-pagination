@@ -41,15 +41,15 @@ Call the `paginate` (default method name) method:
 Counter.paginate({ 
   where: { value: { $gt: 2 } },
   limit: 10,
- });
+});
 ```
 
 The ``paginate`` method returns an object with following properties:
 
 * **result**, the result of the query
 * **cursors**, object containing the cursors' related data
-  * **cursors.before**, first record in the result serialized
-  * **cursors.after**, last record in the result serialized
+  * **cursors.before**, the first record in the result serialized
+  * **cursors.after**, the last record in the result serialized
   * **cursors.hasNext**, `true` or `false` depending on whether there are records after the `after` cursor
   * **cursors.hasPrevious**, `true` or `false` depending on whether there are records before the `before` cursor
 
