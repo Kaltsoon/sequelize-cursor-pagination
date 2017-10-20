@@ -1,4 +1,5 @@
 const base64 = require('base-64');
+const { Op } = require('sequelize');
 
 function decodeCursor(cursor) {
   return cursor ? JSON.parse(base64.decode(cursor)) : null;
@@ -11,7 +12,7 @@ function encodeCursor(cursor) {
 function getPaginationQuery(cursor, cursorOrderOperator, paginationField, primaryKeyField) {
   if (paginationField !== primaryKeyField) {
     return {
-      $or: [
+      [Op.or]: [
         { 
           [paginationField]: {
             [cursorOrderOperator]: cursor[0],
@@ -40,7 +41,7 @@ function withPagination({ methodName = 'paginate', primaryKeyField = 'id' } = {}
       const decodedBefore = !!before ? decodeCursor(before) : null;
       const decodedAfter = !!after ? decodeCursor(after) : null;
       const cursorOrderIsDesc = before ? !desc : desc;
-      const cursorOrderOperator = cursorOrderIsDesc ? '$lt' : '$gt';
+      const cursorOrderOperator = cursorOrderIsDesc ? Op.lt : Op.gt;
       const paginationFieldIsNonId = paginationField !== primaryKeyField;
 
       let paginationQuery;
@@ -52,7 +53,7 @@ function withPagination({ methodName = 'paginate', primaryKeyField = 'id' } = {}
       }
 
       const whereQuery = paginationQuery
-        ? { $and: [paginationQuery, where] }
+        ? { [Op.and]: [paginationQuery, where] }
         : where;
   
       return model.findAll({
