@@ -94,3 +94,10 @@ test('paginates correctly when paginationField is not the primaryKeyField', asyn
     t.is(pagination.cursors.hasNext, false);
     t.is(pagination.cursors.hasPrevious, true);    
 });
+
+test('paginates correctly when findAll attributes are provided', async t => {
+  const data = await generateTestData();
+
+    let pagination = await Test.paginate({ limit: 2, attributes: ['id'], paginationField: 'counter' });
+    t.is(pagination.results[0].counter, undefined);
+});
