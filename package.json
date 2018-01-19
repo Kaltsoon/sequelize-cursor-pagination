@@ -2,14 +2,14 @@
   "scripts": {
     "test": "yarn ava -- --serial"
   },
-  "name": "sequelize-paginate-cursor",
+  "name": "sequelize-cursor-paginate",
   "description": "Sequelize model decorator which provides cursor based pagination queries",
   "version": "1.0.3",
   "main": "./src/index.js",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/0x62/sequelize-paginate-cursor.git"
+    "url": "git+https://github.com/0x62/sequelize-cursor-paginate.git"
   },
   "keywords": [
     "sequelize",
@@ -17,7 +17,7 @@
   ],
   "author": "0x62",
   "bugs": {
-    "url": "https://github.com/0x62/sequelize-paginate-cursor/issues"
+    "url": "https://github.com/0x62/sequelize-cursor-paginate/issues"
   },
   "dependencies": {
     "base-64": "^0.1.0"
