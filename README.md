@@ -7,7 +7,7 @@ Forked from [here](https://github.com/Kaltsoon/sequelize-cursor-pagination), imp
 ## Install
 
 ```
-yarn add sequelize-cursor-pagination
+npm install sequelize-paginate-cursor
 ```
 
 ## How to use
