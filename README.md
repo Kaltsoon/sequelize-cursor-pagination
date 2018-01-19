@@ -1,4 +1,4 @@
-# Sequelize Paginate Cursor
+# Sequelize Cursor Paginate
 
 Sequelize model decorator which provides cursor based pagination queries. [Some motivation and background](https://dev-blog.apollodata.com/understanding-pagination-rest-graphql-and-relay-b10f835549e7).
 
@@ -7,7 +7,7 @@ Forked from [here](https://github.com/Kaltsoon/sequelize-cursor-pagination), imp
 ## Install
 
 ```
-npm install sequelize-paginate-cursor
+npm install sequelize-cursor-paginate
 ```
 
 ## How to use
