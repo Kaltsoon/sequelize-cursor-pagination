@@ -1,4 +1,4 @@
-# Sequelize Cursor Paginate
+# Sequelize Paginate Cursor
 
 Sequelize model decorator which provides cursor based pagination queries. [Some motivation and background](https://dev-blog.apollodata.com/understanding-pagination-rest-graphql-and-relay-b10f835549e7).
 
