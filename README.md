@@ -1,8 +1,8 @@
-# Sequelize Cursor Pagination
-
-[![Build Status](https://travis-ci.org/Kaltsoon/sequelize-cursor-pagination.svg?branch=master)](https://travis-ci.org/Kaltsoon/sequelize-cursor-pagination)
+# Sequelize Cursor Paginate
 
 Sequelize model decorator which provides cursor based pagination queries. [Some motivation and background](https://dev-blog.apollodata.com/understanding-pagination-rest-graphql-and-relay-b10f835549e7).
+
+Forked from [here](https://github.com/Kaltsoon/sequelize-cursor-pagination), improves attributes usage to allow for `include` and `exclude`.
 
 ## Install
 
