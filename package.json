@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "yarn ava -- --serial"
+    "test": "yarn ava --serial"
   },
   "name": "sequelize-cursor-pagination",
   "description": "Sequelize model decorator which provides cursor based pagination queries",
