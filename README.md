@@ -25,7 +25,7 @@ const Counter = sequelize.define('counter', {
 
 const options = {
   methodName: 'paginate',
-  primaryKey: 'id',
+  primaryKeyField: 'id',
 };
 
 withPagination(options)(Counter);
@@ -34,7 +34,7 @@ withPagination(options)(Counter);
 The ``withPagination`` function has the following options:
 
 * **methodName**, the name of the pagination method. The default value is `paginate`.
-* **primaryKey**, the primary key field of the model. The default value is `id`.
+* **primaryKeyField**, the primary key field of the model. The default value is `id`.
 
 Call the `paginate` (default method name) method:
 
