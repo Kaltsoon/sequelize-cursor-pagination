@@ -25,7 +25,7 @@ const Counter = sequelize.define('counter', {
 
 const options = {
   methodName: 'paginate',
-  primaryKey: 'id',
+  primaryKeyField: 'id',
 };
 
 withPagination(options)(Counter);
@@ -34,7 +34,7 @@ withPagination(options)(Counter);
 The ``withPagination`` function has the following options:
 
 * **methodName**, the name of the pagination method. The default value is `paginate`.
-* **primaryKey**, the primary key field of the model. The default value is `id`.
+* **primaryKeyField**, the primary key field of the model. The default value is `id`.
 
 Call the `paginate` (default method name) method:
 
@@ -58,6 +58,7 @@ The ``paginate`` method returns an object with following properties:
 The ``paginate`` method has the following options:
 
 * **where**, the query applied to [findAll](http://docs.sequelizejs.com/manual/tutorial/models-usage.html#-findall-search-for-multiple-elements-in-the-database) call
+* **attributes**, the query applied to [findAll](http://docs.sequelizejs.com/manual/tutorial/models-usage.html#-findall-search-for-multiple-elements-in-the-database) and select only some [attributes](http://docs.sequelizejs.com/manual/tutorial/querying.html#attributes)
 * **include**, applied to ``findAll`` for [eager loading](http://docs.sequelizejs.com/manual/tutorial/models-usage.html#eager-loading)
 * **limit**, limit the number of records returned
 * **desc**, whether to sort in descending order. The default value is ``false``.

@@ -13,7 +13,7 @@ function getPaginationQuery(cursor, cursorOrderOperator, paginationField, primar
   if (paginationField !== primaryKeyField) {
     return {
       [Op.or]: [
-        { 
+        {
           [paginationField]: {
             [cursorOrderOperator]: cursor[0],
           },
@@ -37,7 +37,7 @@ function getPaginationQuery(cursor, cursorOrderOperator, paginationField, primar
 
 function withPagination({ methodName = 'paginate', primaryKeyField = 'id' } = {}) {
   return model => {
-    const paginate = ({ where = {}, include = [], limit, before, after, desc = false, paginationField = primaryKeyField }) => {
+    const paginate = ({ where = {}, attributes = [], include = [], limit, before, after, desc = false, paginationField = primaryKeyField }) => {
       const decodedBefore = !!before ? decodeCursor(before) : null;
       const decodedAfter = !!after ? decodeCursor(after) : null;
       const cursorOrderIsDesc = before ? !desc : desc;
@@ -48,14 +48,14 @@ function withPagination({ methodName = 'paginate', primaryKeyField = 'id' } = {}
 
       if (before) {
         paginationQuery = getPaginationQuery(decodedBefore, cursorOrderOperator, paginationField, primaryKeyField);
-      } else if(after) {
+      } else if (after) {
         paginationQuery = getPaginationQuery(decodedAfter, cursorOrderOperator, paginationField, primaryKeyField);
       }
 
       const whereQuery = paginationQuery
         ? { [Op.and]: [paginationQuery, where] }
         : where;
-  
+
       return model.findAll({
         where: whereQuery,
         include,
@@ -64,9 +64,10 @@ function withPagination({ methodName = 'paginate', primaryKeyField = 'id' } = {}
           cursorOrderIsDesc ? [paginationField, 'DESC'] : paginationField,
           ...(paginationFieldIsNonId ? [primaryKeyField] : []),
         ],
+        ...(Array.isArray(attributes) && attributes.length) ? { attributes } : {},
       }).then(results => {
         const hasMore = results.length > limit;
-  
+
         if (hasMore) {
           results.pop();
         }
@@ -74,7 +75,7 @@ function withPagination({ methodName = 'paginate', primaryKeyField = 'id' } = {}
         if (before) {
           results.reverse();
         }
-  
+
         const hasNext = !!before || hasMore;
         const hasPrevious = !!after || (!!before && hasMore);
 
@@ -82,7 +83,7 @@ function withPagination({ methodName = 'paginate', primaryKeyField = 'id' } = {}
         let afterCursor = null;
 
         if (results.length > 0) {
-          beforeCursor = paginationFieldIsNonId 
+          beforeCursor = paginationFieldIsNonId
             ? encodeCursor([results[0][paginationField], results[0][primaryKeyField]])
             : encodeCursor([results[0][paginationField]]);
 
@@ -102,7 +103,7 @@ function withPagination({ methodName = 'paginate', primaryKeyField = 'id' } = {}
         };
       });
     };
-  
+
     model[methodName] = paginate;
   };
 }
