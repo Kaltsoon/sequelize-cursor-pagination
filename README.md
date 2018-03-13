@@ -40,7 +40,7 @@ Call the `paginate` (default method name) method:
 
 ```javascript
 // ...
-Counter.paginate({ 
+Counter.paginate({
   where: { value: { $gt: 2 } },
   limit: 10,
 });
@@ -63,8 +63,9 @@ The ``paginate`` method has the following options:
 * **limit**, limit the number of records returned
 * **desc**, whether to sort in descending order. The default value is ``false``.
 * **before**, the before cursor
-* **after**, the after curosr
-* **paginationField**, the field to be used for the pagination. The default value is the `primaryKeyField` option value.  
+* **after**, the after cursor
+* **paginationField**, the field to be used for the pagination. The default value is the `primaryKeyField` option value.
+* **raw**, whether the query will return Sequelize Models or raw data. The default is ``false``.
 
 ## Run tests
 
