@@ -19,9 +19,7 @@
   "bugs": {
     "url": "https://github.com/Kaltsoon/sequelize-cursor-pagination/issues"
   },
-  "dependencies": {
-    "base-64": "^0.1.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "ava": "^0.22.0",
     "sequelize": "^4.15.0",
