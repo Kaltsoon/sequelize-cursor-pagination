@@ -1,12 +1,11 @@
-const base64 = require('base-64');
 const { Op } = require('sequelize');
 
-function decodeCursor(cursor) {
-  return cursor ? JSON.parse(base64.decode(cursor)) : null;
+function encodeCursor(cursor) {
+  return cursor ? Buffer.from(JSON.stringify(cursor)).toString('base64') : null;
 }
 
-function encodeCursor(cursor) {
-  return base64.encode(JSON.stringify(cursor));
+function decodeCursor(cursor) {
+  return cursor ? JSON.parse(Buffer.from(cursor, 'base64').toString('utf8')) : null;
 }
 
 function getPaginationQuery(cursor, cursorOrderOperator, paginationField, primaryKeyField) {
