@@ -12,6 +12,15 @@ const Test = sequelize.define('test', {
 
 withPagination()(Test);
 
+const TestParanoid = sequelize.define('test_paranoid', {
+  id: { type:  Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+  counter: Sequelize.INTEGER,
+}, {
+  paranoid: true,
+});
+
+withPagination()(TestParanoid);
+
 function generateTestData() {
   return Promise.all([
     Test.create({ counter: 4, id: 1 }),
@@ -100,4 +109,13 @@ test('paginates correctly when findAll attributes are provided', async t => {
 
     let pagination = await Test.paginate({ limit: 2, attributes: ['id'], paginationField: 'counter' });
     t.is(pagination.results[0].counter, undefined);
+});
+
+test('paginates correctly with paranoid=false', async t => {
+    const model = await TestParanoid.create({ counter: 4, id: 1 });
+    await model.destroy();
+
+    let pagination = await TestParanoid.paginate({ limit: 1, paranoid: false });
+    t.is(pagination.results.length, 1);
+    t.truthy(pagination.results[0].deletedAt);
 });
