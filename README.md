@@ -66,6 +66,7 @@ The ``paginate`` method has the following options:
 * **after**, the after cursor
 * **paginationField**, the field to be used for the pagination. The default value is the `primaryKeyField` option value.
 * **raw**, whether the query will return Sequelize Models or raw data. The default is ``false``.
+* **paranoid**, whether the query will return deleted models if the model is set to `paranoid: true`. The default is ``true``.
 
 ## Run tests
 
