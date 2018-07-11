@@ -4,6 +4,8 @@ Sequelize model decorator which provides cursor based pagination queries. [Some 
 
 Forked from [here](https://github.com/Kaltsoon/sequelize-cursor-pagination), improves attributes usage to allow for `include` and `exclude`.
 
+`Model.scope('xyz').paginate()` is not supported, you should use the scope option.
+
 ## Install
 
 ```
@@ -68,6 +70,7 @@ The ``paginate`` method has the following options:
 * **paginationField**, the field to be used for the pagination. The default value is the `primaryKeyField` option value.
 * **raw**, whether the query will return Sequelize Models or raw data. The default is ``false``.
 * **paranoid**, whether the query will return deleted models if the model is set to `paranoid: true`. The default is ``true``.
+* **scope**, scope to use when querying - see [scoped models](http://docs.sequelizejs.com/manual/tutorial/scopes.html)
 
 ## Run tests
 

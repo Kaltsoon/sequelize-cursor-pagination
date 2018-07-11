@@ -36,7 +36,18 @@ function getPaginationQuery(cursor, cursorOrderOperator, paginationField, primar
 
 function withPagination({ methodName = 'paginate', primaryKeyField = 'id' } = {}) {
   return model => {
-    const paginate = ({ where = {}, attributes = [], include = [], limit, before, after, desc = false, paginationField = primaryKeyField, raw = false, paranoid = true }) => {
+    const paginate = ({
+      where = {},
+      attributes = [],
+      include = [],
+      limit,
+      before,
+      after,
+      desc = false,
+      paginationField = primaryKeyField,
+      raw = false,
+      paranoid = true,
+      scope }) => {
       const decodedBefore = !!before ? decodeCursor(before) : null;
       const decodedAfter = !!after ? decodeCursor(after) : null;
       const cursorOrderIsDesc = before ? !desc : desc;
@@ -44,6 +55,7 @@ function withPagination({ methodName = 'paginate', primaryKeyField = 'id' } = {}
       const paginationFieldIsNonId = paginationField !== primaryKeyField;
 
       let paginationQuery;
+      let _model = model;
 
       if (before) {
         paginationQuery = getPaginationQuery(decodedBefore, cursorOrderOperator, paginationField, primaryKeyField);
@@ -51,11 +63,15 @@ function withPagination({ methodName = 'paginate', primaryKeyField = 'id' } = {}
         paginationQuery = getPaginationQuery(decodedAfter, cursorOrderOperator, paginationField, primaryKeyField);
       }
 
+      if (scope) {
+        _model = model.scope(scope)
+      }
+
       const whereQuery = paginationQuery
         ? { [Op.and]: [paginationQuery, where] }
         : where;
 
-      return model.findAll({
+      return _model.findAll({
         where: whereQuery,
         include,
         attributes,
