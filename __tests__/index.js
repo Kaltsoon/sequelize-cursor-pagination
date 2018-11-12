@@ -111,6 +111,13 @@ test('paginates correctly when findAll attributes are provided', async t => {
     t.is(pagination.results[0].counter, undefined);
 });
 
+test('paginates correctly when findAll attributes are provided', async t => {
+  const data = await generateTestData();
+
+    let pagination = await Test.paginate({ order: [ 'counter', 'DESC' ], limit: 5, attributes: ['counter'], paginationField: 'counter' });
+    t.deepEqual(pagination.results.map(r => r.counter), [ 4, 4, 3, 2, 1 ]);
+});
+
 test('paginates correctly with paranoid=false', async t => {
     const model = await TestParanoid.create({ counter: 4, id: 1 });
     await model.destroy();

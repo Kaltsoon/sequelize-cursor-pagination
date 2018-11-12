@@ -61,6 +61,7 @@ The ``paginate`` method has the following options:
 * **attributes**, the query applied to [findAll](http://docs.sequelizejs.com/manual/tutorial/models-usage.html#-findall-search-for-multiple-elements-in-the-database) and select only some [attributes](http://docs.sequelizejs.com/manual/tutorial/querying.html#attributes)
 * **include**, applied to ``findAll`` for [eager loading](http://docs.sequelizejs.com/manual/tutorial/models-usage.html#eager-loading)
 * **limit**, limit the number of records returned
+* **order**, Custom ordering attributes,
 * **desc**, whether to sort in descending order. The default value is ``false``.
 * **before**, the before cursor
 * **after**, the after cursor
