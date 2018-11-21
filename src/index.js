@@ -1,3 +1,5 @@
+'use strict'
+
 const { Op } = require('sequelize');
 
 function encodeCursor(cursor) {
@@ -36,7 +38,7 @@ function getPaginationQuery(cursor, cursorOrderOperator, paginationField, primar
 
 function withPagination({ methodName = 'paginate', primaryKeyField = 'id' } = {}) {
   return model => {
-    const paginate = ({ where = {}, attributes = [], include = [], limit, before, after, desc = false, paginationField = primaryKeyField, raw = false, paranoid = true, subQuery }) => {
+    const paginate = ({ order: extraOrder, where = {}, attributes = [], include = [], limit, before, after, desc = false, paginationField = primaryKeyField, raw = false, paranoid = true, subQuery }) => {
       const decodedBefore = !!before ? decodeCursor(before) : null;
       const decodedAfter = !!after ? decodeCursor(after) : null;
       const cursorOrderIsDesc = before ? !desc : desc;
@@ -55,14 +57,17 @@ function withPagination({ methodName = 'paginate', primaryKeyField = 'id' } = {}
         ? { [Op.and]: [paginationQuery, where] }
         : where;
 
+      const order = [
+        ...extraOrder ? [ extraOrder ] : [],
+        cursorOrderIsDesc ? [paginationField, 'DESC'] : paginationField,
+        ...(paginationFieldIsNonId ? [primaryKeyField] : [])
+      ]
+
       return model.findAll({
         where: whereQuery,
         include,
         limit: limit + 1,
-        order: [
-          cursorOrderIsDesc ? [paginationField, 'DESC'] : paginationField,
-          ...(paginationFieldIsNonId ? [primaryKeyField] : []),
-        ],
+        order,
         ...(Array.isArray(attributes) && attributes.length) ? { attributes } : {},
         raw,
         paranoid,
