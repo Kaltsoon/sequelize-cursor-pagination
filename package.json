@@ -22,7 +22,7 @@
   "dependencies": {},
   "devDependencies": {
     "ava": "^0.22.0",
-    "sequelize": "^4.15.0",
-    "sqlite3": "^3.1.11"
+    "sequelize": "5.8.2",
+    "sqlite3": "4.0.6"
   }
 }
