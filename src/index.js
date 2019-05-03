@@ -1,6 +1,16 @@
 'use strict'
 
-const { Op } = require('sequelize');
+let { Op } = require('sequelize');
+
+if (!Op) {
+  // Support older versions of sequelize
+  Op = {
+    and: '$and',
+    or: '$or',
+    lt: '$lt',
+    gt: '$gt'
+  };
+}
 
 function encodeCursor(cursor) {
   return cursor ? Buffer.from(JSON.stringify(cursor)).toString('base64') : null;
