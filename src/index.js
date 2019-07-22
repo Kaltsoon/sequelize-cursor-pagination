@@ -167,6 +167,7 @@ function withPagination({
     };
 
     model[methodName] = paginate;
+    return model;
   };
 }
 
