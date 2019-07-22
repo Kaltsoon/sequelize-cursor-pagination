@@ -97,6 +97,16 @@ test('paginates correctly when sort direction is descending', async t => {
   t.is(pagination.cursors.hasPrevious, true);
 });
 
+test('paginates correctly when limit is not provided', async t => {
+  const data = await generateTestData();
+
+  let pagination = await Test.paginate();
+
+  t.deepEqual(pagination.results.map(r => r.id), [1, 2, 3, 4, 5]);
+  t.is(pagination.cursors.hasNext, false);
+  t.is(pagination.cursors.hasPrevious, false);
+});
+
 test('paginates correctly when paginationField is not the primaryKeyField', async t => {
   const data = await generateTestData();
 

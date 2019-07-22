@@ -72,7 +72,7 @@ function withPagination({
       paranoid = true,
       subQuery,
       ...queryArgs
-    }) => {
+    } = {}) => {
       const decodedBefore = !!before ? decodeCursor(before) : null;
       const decodedAfter = !!after ? decodeCursor(after) : null;
       const cursorOrderIsDesc = before ? !desc : desc;
@@ -111,7 +111,7 @@ function withPagination({
         .findAll({
           where: whereQuery,
           include,
-          limit: limit + 1,
+          ...(limit && { limit: limit + 1 }),
           order,
           ...(Array.isArray(attributes) && attributes.length
             ? { attributes }
