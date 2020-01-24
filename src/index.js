@@ -70,6 +70,8 @@ function withPagination({
       paginationField = primaryKeyField,
       raw = false,
       paranoid = true,
+      nest  = false,
+      mapToModel  = false,
       subQuery,
       ...queryArgs
     } = {}) => {
@@ -118,6 +120,8 @@ function withPagination({
             : {}),
           raw,
           paranoid,
+          nest,
+          mapToModel,
           ...(typeof subQuery === 'boolean' && { subQuery }),
           ...queryArgs,
         })
