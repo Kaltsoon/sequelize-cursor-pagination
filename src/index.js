@@ -8,7 +8,7 @@ if (!Op) {
     and: '$and',
     or: '$or',
     lt: '$lt',
-    gt: '$gt'
+    gt: '$gt',
   };
 }
 
@@ -70,8 +70,8 @@ function withPagination({
       paginationField = primaryKeyField,
       raw = false,
       paranoid = true,
-      nest  = false,
-      mapToModel  = false,
+      nest = false,
+      mapToModel = false,
       subQuery,
       ...queryArgs
     } = {}) => {
@@ -80,6 +80,7 @@ function withPagination({
       const cursorOrderIsDesc = before ? !desc : desc;
       const cursorOrderOperator = cursorOrderIsDesc ? Op.lt : Op.gt;
       const paginationFieldIsNonId = paginationField !== primaryKeyField;
+      const sortDirection = desc ? 'DESC' : 'ASC';
 
       let paginationQuery;
 
@@ -104,10 +105,18 @@ function withPagination({
         : where;
 
       const order = [
-        ...(extraOrder ? [extraOrder] : []),
-        cursorOrderIsDesc ? [paginationField, 'DESC'] : paginationField,
-        ...(paginationFieldIsNonId ? [primaryKeyField] : []),
+        cursorOrderIsDesc
+          ? [paginationField, sortDirection]
+          : [paginationField],
       ];
+
+      if (extraOrder) {
+        order.push([extraOrder]);
+      }
+
+      if (paginationFieldIsNonId) {
+        order.push([primaryKeyField, sortDirection]);
+      }
 
       return model
         .findAll({
