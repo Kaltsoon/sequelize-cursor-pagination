@@ -102,7 +102,10 @@ test('paginates correctly when limit is not provided', async t => {
 
   let pagination = await Test.paginate();
 
-  t.deepEqual(pagination.results.map(r => r.id), [1, 2, 3, 4, 5]);
+  t.deepEqual(
+    pagination.results.map(r => r.id),
+    [1, 2, 3, 4, 5],
+  );
   t.is(pagination.cursors.hasNext, false);
   t.is(pagination.cursors.hasPrevious, false);
 });
@@ -160,12 +163,16 @@ test('paginates correctly when findAll attributes are provided', async t => {
 
   let pagination = await Test.paginate({
     order: ['counter', 'DESC'],
+    desc: true,
     limit: 5,
     attributes: ['counter'],
     paginationField: 'counter',
   });
 
-  t.deepEqual(pagination.results.map(r => r.counter), [4, 4, 3, 2, 1]);
+  t.deepEqual(
+    pagination.results.map(r => r.counter),
+    [4, 4, 3, 2, 1],
+  );
 });
 
 test('paginates correctly with paranoid=false', async t => {
