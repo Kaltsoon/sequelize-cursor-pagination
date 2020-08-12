@@ -67,6 +67,9 @@ function withPagination({
       before,
       after,
       desc = false,
+      // [model, field, direction]
+      // [ 'order', 'order_number', 'DESC' ]
+      associatedModelPagination = [],
       paginationField = primaryKeyField,
       raw = false,
       paranoid = true,
@@ -104,11 +107,14 @@ function withPagination({
         ? { [Op.and]: [paginationQuery, where] }
         : where;
 
-      const order = [
+      let order = [
         cursorOrderIsDesc
           ? [paginationField, sortDirection]
           : [paginationField],
       ];
+      if (associatedModelPagination.length) {
+        order = [[...associatedModelPagination]];
+      }
 
       if (extraOrder) {
         order.push([extraOrder]);
@@ -117,6 +123,8 @@ function withPagination({
       if (paginationFieldIsNonId) {
         order.push([primaryKeyField, sortDirection]);
       }
+
+      console.log('order', order);
 
       return model
         .findAll({
