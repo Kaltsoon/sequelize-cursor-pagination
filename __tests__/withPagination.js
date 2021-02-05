@@ -140,3 +140,19 @@ test('paginates correctly with where', async () => {
 
   expectIdsToEqual(result, [5, 4, 3]);
 });
+
+test('paginates correctly with different order formats', async () => {
+  await generateTestData();
+
+  let result = await Test.paginate({ order: [['counter']], limit: 5 });
+
+  expectIdsToEqual(result, [5, 4, 1, 2, 3]);
+
+  result = await Test.paginate({ order: [['counter', 'asc']], limit: 5 });
+
+  expectIdsToEqual(result, [5, 4, 1, 2, 3]);
+
+  result = await Test.paginate({ order: [['counter', 'desc']], limit: 5 });
+
+  expectIdsToEqual(result, [2, 3, 1, 4, 5]);
+});

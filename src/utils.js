@@ -26,7 +26,17 @@ const parseCursor = (cursor) => {
 
 const normalizeOrder = (order, primaryKeyField) => {
   const normalized = order.map((o) => {
-    return typeof o === 'string' ? [o, 'ASC'] : o;
+    if (typeof o === 'string') {
+      return [o, 'ASC'];
+    }
+
+    if (Array.isArray(o)) {
+      const [field, direction] = o;
+
+      return [field, direction || 'ASC'];
+    }
+
+    return o;
   });
 
   const primaryKeyOrder = normalized.find(
