@@ -67,8 +67,6 @@ The `paginate` method returns an object with following properties:
 
 The `paginate` method has the following options:
 
-- `paginationField`: The field used for ordering. The default value is the `primaryKeyField` option value
-- `desc`: A boolean that indicates whether to sort in descending order. The default value is `false` (which means that the sort order is ascending)
 - `after`: The cursor that indicates after which edge the next set of edges should be fetched
 - `limit`: The maximum number of edges returned
 
