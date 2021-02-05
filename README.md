@@ -63,7 +63,6 @@ The `paginate` method returns a promise, which resolves an object with following
   - `startCursor`: The cursor for the first node in the result edges
   - `endCursor`: The cursor for the last node in the result edges
   - `hasNextPage`: A boolean that indicates whether there are edges after the `endCursor` (`false` indicates that the are no more edges after the `endCursor`)
-  - `totalCount`: The total number of rows matching the query
 
 The `paginate` method has the following options:
 

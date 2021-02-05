@@ -63,7 +63,6 @@ test('paginates correctly with cursor', async () => {
 
   let result = await Test.paginate({ limit: 2 });
 
-  expect(result.pageInfo.totalCount).toBe(5);
   expectIdsToEqual(result, [1, 2]);
   expect(result.pageInfo.hasNextPage).toBe(true);
   expectCorrectPageInfoCursors(result);
@@ -73,7 +72,6 @@ test('paginates correctly with cursor', async () => {
     after: result.pageInfo.endCursor,
   });
 
-  expect(result.pageInfo.totalCount).toBe(5);
   expectIdsToEqual(result, [3, 4]);
   expect(result.pageInfo.hasNextPage).toBe(true);
   expectCorrectPageInfoCursors(result);
@@ -83,7 +81,6 @@ test('paginates correctly with cursor', async () => {
     after: result.pageInfo.endCursor,
   });
 
-  expect(result.pageInfo.totalCount).toBe(5);
   expectIdsToEqual(result, [5]);
   expect(result.pageInfo.hasNextPage).toBe(false);
   expectCorrectPageInfoCursors(result);
@@ -139,7 +136,6 @@ test('paginates correctly with where', async () => {
   let result = await Test.paginate({ order, where: { extra: 3 }, limit: 5 });
 
   expectIdsToEqual(result, [5, 4, 3]);
-  expect(result.pageInfo.totalCount).toBe(3);
 });
 
 test('paginates correctly with different order formats', async () => {

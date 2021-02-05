@@ -28,17 +28,12 @@ const withPagination = (options = {}) => (Model) => {
       ? { [Op.and]: [paginationQuery, where] }
       : where;
 
-    const [results, totalCount] = await Promise.all([
-      Model.findAll({
-        where: whereQuery,
-        ...(limit && { limit: limit + 1 }),
-        order: normalizedOrder,
-        ...queryArgs,
-      }),
-      Model.count({
-        where,
-      }),
-    ]);
+    const results = await Model.findAll({
+      where: whereQuery,
+      ...(limit && { limit: limit + 1 }),
+      order: normalizedOrder,
+      ...queryArgs,
+    });
 
     const hasNextPage = results.length > limit;
 
@@ -55,7 +50,6 @@ const withPagination = (options = {}) => (Model) => {
       hasNextPage,
       startCursor: edges.length > 0 ? edges[0].cursor : null,
       endCursor: edges.length > 0 ? edges[edges.length - 1].cursor : null,
-      totalCount,
     };
 
     return {
