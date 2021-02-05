@@ -70,7 +70,9 @@ The `paginate` method has the following options:
 - `after`: The cursor that indicates after which edge the next set of edges should be fetched
 - `limit`: The maximum number of edges returned
 
-Other options passed to the `paginate` method will be directly passed to the model's `findAll` method. The `order` option format only supports the `['field']` and `[['field', 'DESC']]` variations.
+Other options passed to the `paginate` method will be directly passed to the model's `findAll` method. 
+
+**⚠️ NB:** The `order` option format only supports the `['field']` and `['field', 'DESC']` variations (field name and the optional order direction). For example ordering by an associated model's field won't work.
 
 ## Examples
 
