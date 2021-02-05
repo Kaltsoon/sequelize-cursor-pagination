@@ -14,14 +14,11 @@ const withPagination = (options = {}) => (Model) => {
     where = {},
     after,
     limit,
-    afterCursor,
     ...queryArgs
   } = {}) => {
     const normalizedOrder = normalizeOrder(order, primaryKeyField);
 
-    const parsedAfter = Boolean(after)
-      ? parseCursor(after, normalizedOrder)
-      : null;
+    const parsedAfter = after ? parseCursor(after, normalizedOrder) : null;
 
     const paginationQuery = parsedAfter
       ? getPaginationQuery(normalizedOrder, parsedAfter)
