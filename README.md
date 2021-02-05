@@ -1,21 +1,28 @@
 # Sequelize Cursor Pagination
 
-[![Build Status](https://travis-ci.org/Kaltsoon/sequelize-cursor-pagination.svg?branch=master)](https://travis-ci.org/Kaltsoon/sequelize-cursor-pagination)
-
 Sequelize model decorator which provides cursor based pagination queries. [Some motivation and background](https://dev-blog.apollodata.com/understanding-pagination-rest-graphql-and-relay-b10f835549e7).
 
 ## Install
 
+With npm:
+
+```bash
+npm install sequelize-cursor-pagination
 ```
+
+Or with Yarn:
+
+```bash
 yarn add sequelize-cursor-pagination
 ```
 
-## How to use
+## How to use?
 
-Define a sequelize model:
+Define a Sequelize model and decorate it with the `withPagination` decorator:
 
 ```javascript
 // ...
+
 const withPagination = require('sequelize-cursor-pagination');
 
 const Counter = sequelize.define('counter', {
@@ -33,46 +40,69 @@ withPagination(options)(Counter);
 
 The `withPagination` function has the following options:
 
-- **methodName**, the name of the pagination method. The default value is `paginate`.
-- **primaryKeyField**, the primary key field of the model. The default value is `id`.
+- `methodName`: The name of the pagination method. The default value is `paginate`.
+- `primaryKeyField`: The primary key field of the model. The default value is `id`.
 
-Call the `paginate` (default method name) method:
+Call the `paginate` (the default method name) method:
 
 ```javascript
 // ...
+
 Counter.paginate({
-  where: { value: { $gt: 2 } },
+  where: { value: { [Op.gt]: 2 } },
   limit: 10,
 });
 ```
 
 The `paginate` method returns an object with following properties:
 
-- **results**, the results of the query
-- **cursors**, object containing the cursors' related data
-  - **cursors.before**, the first record in the result serialized
-  - **cursors.after**, the last record in the result serialized
-  - **cursors.hasNext**, `true` or `false` depending on whether there are records after the `after` cursor
-  - **cursors.hasPrevious**, `true` or `false` depending on whether there are records before the `before` cursor
+- `edges`: An array containing the results of the query. Eeach item in the array contains and object with following properties:
+  - `node`: The model instance
+  - `cursor`: Cursor for the model instance
+- `pageInfo`: An object containing the pagination related data with the following properties:
+  - `startCursor`: The cursor for the first node in the result edges
+  - `endCursor`: The cursor for the last node in the result edges
+  - `hasNextPage`: A boolean that indicates whether there are edges after the `endCursor` (`false` indicates that the are no more edges after the `endCursor`)
+  - `totalCount`: The total number of rows matching the query
 
 The `paginate` method has the following options:
 
-- **where**, the query applied to [findAll](http://docs.sequelizejs.com/manual/tutorial/models-usage.html#-findall-search-for-multiple-elements-in-the-database) call
-- **attributes**, the query applied to [findAll](http://docs.sequelizejs.com/manual/tutorial/models-usage.html#-findall-search-for-multiple-elements-in-the-database) and select only some [attributes](http://docs.sequelizejs.com/manual/tutorial/querying.html#attributes)
-- **include**, applied to `findAll` for [eager loading](http://docs.sequelizejs.com/manual/tutorial/models-usage.html#eager-loading)
-- **limit**, limit the number of records returned
-- **order**, Custom ordering attributes,
-- **desc**, whether to sort in descending order. The default value is `false`.
-- **before**, the before cursor
-- **after**, the after cursor
-- **paginationField**, the field to be used for the pagination. The default value is the `primaryKeyField` option value.
-- **raw**, whether the query will return Sequelize Models or raw data. The default is `false`.
-- **paranoid**, whether the query will return deleted models if the model is set to `paranoid: true`. The default is `true`.
+- `paginationField`: The field used for ordering. The default value is the `primaryKeyField` option value
+- `desc`: A boolean that indicates whether to sort in descending order. The default value is `false` (which means that the sort order is ascending)
+- `after`: The cursor that indicates after which edge the next set of edges should be fetched
+- `limit`: The maximum number of edges returned
 
-Other options passed to the `paginate` method will be directly passed to the model's `findAll` method. Use them at your own risk.
+Other options passed to the `paginate` method will be directly passed to the model's `findAll` method. The `order` option format only supported in the `['field']` or `[['field', 'DESC']]` variations.
 
-## Run tests
+## Examples
+
+The examples use the `Counter` model defined above.
+
+Fetch the first `20` edges ordered by the `id` field (the `primaryKeyField` field) in ascending order:
+
+```javascript
+const result = await Counter.paginate({
+  limit: 20,
+});
+```
+
+First, fetch the first `10` edges ordered by the `value` field in a descending order. Second, fetch the next `10` edges after the `endCursor`:
+
+```javascript
+const firstResult = await Counter.paginate({
+  order: [['value', 'ASC']],
+  limit: 10,
+});
+
+const secondResult = await Counter.paginate({
+  order: [['value', 'ASC']],
+  limit: 10,
+  after: firstResult.pageInfo.endCursor,
+});
+```
+
+## Running tests
 
 ```
-yarn test
+npm run test
 ```
