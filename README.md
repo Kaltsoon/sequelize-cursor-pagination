@@ -90,12 +90,12 @@ First, fetch the first `10` edges ordered by the `value` field in a descending o
 
 ```javascript
 const firstResult = await Counter.paginate({
-  order: [['value', 'ASC']],
+  order: [['value', 'DESC']],
   limit: 10,
 });
 
 const secondResult = await Counter.paginate({
-  order: [['value', 'ASC']],
+  order: [['value', 'DESC']],
   limit: 10,
   after: firstResult.pageInfo.endCursor,
 });
