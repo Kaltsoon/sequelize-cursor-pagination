@@ -48,13 +48,13 @@ The `withPagination` function has the following options:
 Call the `paginate` (the default method name) method:
 
 ```javascript
-Counter.paginate({
+const result = await Counter.paginate({
   where: { value: { [Op.gt]: 2 } },
   limit: 10,
 });
 ```
 
-The `paginate` method returns an object with following properties:
+The `paginate` method returns a promise, which resolves an object with following properties:
 
 - `edges`: An array containing the results of the query. Eeach item in the array contains and object with following properties:
   - `node`: The model instance
@@ -70,7 +70,7 @@ The `paginate` method has the following options:
 - `after`: The cursor that indicates after which edge the next set of edges should be fetched
 - `limit`: The maximum number of edges returned
 
-Other options passed to the `paginate` method will be directly passed to the model's `findAll` method. 
+Other options passed to the `paginate` method will be directly passed to the model's `findAll` method.
 
 **⚠️ NB:** The `order` option format only supports the `['field']` and `['field', 'DESC']` variations (field name and the optional order direction). For example ordering by an associated model's field won't work.
 

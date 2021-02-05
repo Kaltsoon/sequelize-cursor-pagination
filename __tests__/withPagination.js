@@ -139,6 +139,7 @@ test('paginates correctly with where', async () => {
   let result = await Test.paginate({ order, where: { extra: 3 }, limit: 5 });
 
   expectIdsToEqual(result, [5, 4, 3]);
+  expect(result.pageInfo.totalCount).toBe(3);
 });
 
 test('paginates correctly with different order formats', async () => {
