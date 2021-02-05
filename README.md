@@ -1,3 +1,5 @@
+![npm](https://img.shields.io/npm/v/sequelize-cursor-pagination) ![Build status](https://github.com/Kaltsoon/sequelize-cursor-pagination/workflows/CI/badge.svg)
+
 # Sequelize Cursor Pagination
 
 Sequelize model decorator which provides cursor based pagination queries. [Some motivation and background](https://dev-blog.apollodata.com/understanding-pagination-rest-graphql-and-relay-b10f835549e7).
@@ -46,8 +48,6 @@ The `withPagination` function has the following options:
 Call the `paginate` (the default method name) method:
 
 ```javascript
-// ...
-
 Counter.paginate({
   where: { value: { [Op.gt]: 2 } },
   limit: 10,
@@ -72,7 +72,7 @@ The `paginate` method has the following options:
 - `after`: The cursor that indicates after which edge the next set of edges should be fetched
 - `limit`: The maximum number of edges returned
 
-Other options passed to the `paginate` method will be directly passed to the model's `findAll` method. The `order` option format only supported in the `['field']` or `[['field', 'DESC']]` variations.
+Other options passed to the `paginate` method will be directly passed to the model's `findAll` method. The `order` option format only supports the `['field']` and `[['field', 'DESC']]` variations.
 
 ## Examples
 
