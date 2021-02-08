@@ -1,58 +1,88 @@
 const {
   Op,
   parseCursor,
-  serializeCursor,
+  createCursor,
   normalizeOrder,
   getPaginationQuery,
+  reverseOrder,
 } = require('./utils');
 
 const withPagination = (options = {}) => (Model) => {
   const { methodName = 'paginate', primaryKeyField = 'id' } = options;
 
   const paginate = async ({
-    order = [],
-    where = {},
+    order: orderOption,
+    where,
     after,
+    before,
     limit,
     ...queryArgs
   } = {}) => {
-    const normalizedOrder = normalizeOrder(order, primaryKeyField);
+    let order = normalizeOrder(orderOption, primaryKeyField);
 
-    const parsedAfter = after ? parseCursor(after, normalizedOrder) : null;
+    order = before ? reverseOrder(order) : order;
 
-    const paginationQuery = parsedAfter
-      ? getPaginationQuery(normalizedOrder, parsedAfter)
+    const cursor = after
+      ? parseCursor(after)
+      : before
+      ? parseCursor(before)
       : null;
 
-    const whereQuery = paginationQuery
+    const paginationQuery = cursor ? getPaginationQuery(order, cursor) : null;
+
+    const paginationWhere = paginationQuery
       ? { [Op.and]: [paginationQuery, where] }
       : where;
 
-    const results = await Model.findAll({
-      where: whereQuery,
-      ...(limit && { limit: limit + 1 }),
-      order: normalizedOrder,
+    const paginationQueryOptions = {
+      where: paginationWhere,
+      limit,
+      order,
       ...queryArgs,
-    });
+    };
 
-    const hasNextPage = results.length > limit;
+    const totalCountQueryOptions = {
+      where,
+    };
 
-    if (hasNextPage) {
-      results.pop();
+    const cursorCountQueryOptions = {
+      where: paginationWhere,
+    };
+
+    const [instances, totalCount, cursorCount] = await Promise.all([
+      Model.findAll(paginationQueryOptions),
+      Model.count(totalCountQueryOptions),
+      Model.count(cursorCountQueryOptions),
+    ]);
+
+    if (before) {
+      instances.reverse();
     }
 
-    const edges = results.map((node) => ({
+    const remaining = cursorCount - instances.length;
+
+    const hasNextPage =
+      (!before && remaining > 0) ||
+      (Boolean(before) && totalCount - cursorCount > 0);
+
+    const hasPreviousPage =
+      (Boolean(before) && remaining > 0) ||
+      (!before && totalCount - cursorCount > 0);
+
+    const edges = instances.map((node) => ({
       node,
-      cursor: serializeCursor(node, normalizedOrder),
+      cursor: createCursor(node, order),
     }));
 
     const pageInfo = {
       hasNextPage,
+      hasPreviousPage,
       startCursor: edges.length > 0 ? edges[0].cursor : null,
       endCursor: edges.length > 0 ? edges[edges.length - 1].cursor : null,
     };
 
     return {
+      totalCount,
       edges,
       pageInfo,
     };

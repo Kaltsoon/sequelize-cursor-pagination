@@ -25,19 +25,23 @@ const parseCursor = (cursor) => {
 };
 
 const normalizeOrder = (order, primaryKeyField) => {
-  const normalized = order.map((o) => {
-    if (typeof o === 'string') {
-      return [o, 'ASC'];
-    }
+  let normalized = [];
 
-    if (Array.isArray(o)) {
-      const [field, direction] = o;
+  if (Array.isArray(order)) {
+    normalized = order.map((o) => {
+      if (typeof o === 'string') {
+        return [o, 'ASC'];
+      }
 
-      return [field, direction || 'ASC'];
-    }
+      if (Array.isArray(o)) {
+        const [field, direction] = o;
 
-    return o;
-  });
+        return [field, direction || 'ASC'];
+      }
+
+      return o;
+    });
+  }
 
   const primaryKeyOrder = normalized.find(
     ([field]) => field === primaryKeyField,
@@ -48,10 +52,21 @@ const normalizeOrder = (order, primaryKeyField) => {
     : [...normalized, [primaryKeyField, 'ASC']];
 };
 
-const serializeCursor = (instance, order) => {
-  const cursorObject = order.map(([field]) => instance[field]);
+const reverseOrder = (order) => {
+  return order.map(([field, direction]) => [
+    field,
+    direction === 'DESC' ? 'ASC' : 'DESC',
+  ]);
+};
 
-  return Buffer.from(JSON.stringify(cursorObject)).toString('base64');
+const serializeCursor = (payload) => {
+  return Buffer.from(JSON.stringify(payload)).toString('base64');
+};
+
+const createCursor = (instance, order) => {
+  const payload = order.map(([field]) => instance[field]);
+
+  return serializeCursor(payload);
 };
 
 const isValidCursor = (cursor, order) => {
@@ -77,7 +92,7 @@ const recursivelyGetPaginationQuery = (order, cursor) => {
         },
         {
           [order[0][0]]: cursor[0],
-          ...getPaginationQuery(order.slice(1), cursor.slice(1)),
+          ...recursivelyGetPaginationQuery(order.slice(1), cursor.slice(1)),
         },
       ],
     };
@@ -99,4 +114,6 @@ module.exports = {
   normalizeOrder,
   isValidCursor,
   getPaginationQuery,
+  createCursor,
+  reverseOrder,
 };

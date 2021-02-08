@@ -58,14 +58,16 @@ test('sets correct method when methodName is provided', () => {
   expect(typeof Test.myPaginate === 'function').toBe(true);
 });
 
-test('paginates correctly with cursor', async () => {
+test('paginates correctly with after cursor', async () => {
   await generateTestData();
 
   let result = await Test.paginate({ limit: 2 });
 
   expectIdsToEqual(result, [1, 2]);
   expect(result.pageInfo.hasNextPage).toBe(true);
+  expect(result.pageInfo.hasPreviousPage).toBe(false);
   expectCorrectPageInfoCursors(result);
+  expect(result.totalCount).toBe(5);
 
   result = await Test.paginate({
     limit: 2,
@@ -74,7 +76,9 @@ test('paginates correctly with cursor', async () => {
 
   expectIdsToEqual(result, [3, 4]);
   expect(result.pageInfo.hasNextPage).toBe(true);
+  expect(result.pageInfo.hasPreviousPage).toBe(true);
   expectCorrectPageInfoCursors(result);
+  expect(result.totalCount).toBe(5);
 
   result = await Test.paginate({
     limit: 2,
@@ -83,7 +87,31 @@ test('paginates correctly with cursor', async () => {
 
   expectIdsToEqual(result, [5]);
   expect(result.pageInfo.hasNextPage).toBe(false);
+  expect(result.pageInfo.hasPreviousPage).toBe(true);
   expectCorrectPageInfoCursors(result);
+  expect(result.totalCount).toBe(5);
+});
+
+test('paginates correctly with before cursor', async () => {
+  await generateTestData();
+
+  let result = await Test.paginate({ limit: 2 });
+
+  expectIdsToEqual(result, [1, 2]);
+
+  result = await Test.paginate({
+    limit: 2,
+    after: result.pageInfo.endCursor,
+  });
+
+  expectIdsToEqual(result, [3, 4]);
+
+  result = await Test.paginate({
+    limit: 2,
+    before: result.pageInfo.startCursor,
+  });
+
+  expectIdsToEqual(result, [1, 2]);
 });
 
 test('paginates correctly with simple order', async () => {
@@ -136,6 +164,7 @@ test('paginates correctly with where', async () => {
   let result = await Test.paginate({ order, where: { extra: 3 }, limit: 5 });
 
   expectIdsToEqual(result, [5, 4, 3]);
+  expect(result.totalCount).toBe(3);
 });
 
 test('paginates correctly with different order formats', async () => {
