@@ -64,7 +64,7 @@ The `paginate` method returns a promise, which resolves an object with the follo
   - `startCursor`: The cursor for the first node in the result edges
   - `endCursor`: The cursor for the last node in the result edges
   - `hasNextPage`: A boolean that indicates whether there are edges _after_ the `endCursor` (`false` indicates that there are no more edges after the `endCursor`)
-  - `hasPreviousPage`: A boolean that indicates whether there are edges _before_ the `startCursor` (`false` indicates that there are no more edges before the `startCursor`)`
+  - `hasPreviousPage`: A boolean that indicates whether there are edges _before_ the `startCursor` (`false` indicates that there are no more edges before the `startCursor`)
 
 The `paginate` method has the following options:
 
