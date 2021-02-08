@@ -55,7 +55,7 @@ const normalizeOrder = (order, primaryKeyField) => {
 const reverseOrder = (order) => {
   return order.map(([field, direction]) => [
     field,
-    direction === 'DESC' ? 'ASC' : 'DESC',
+    direction.toLowerCase() === 'desc' ? 'ASC' : 'DESC',
   ]);
 };
 

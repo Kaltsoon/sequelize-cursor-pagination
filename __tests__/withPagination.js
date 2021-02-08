@@ -130,6 +130,14 @@ test('paginates correctly with simple order', async () => {
   });
 
   expectIdsToEqual(result, [2, 3]);
+
+  result = await Test.paginate({
+    order,
+    limit: 3,
+    before: result.pageInfo.startCursor,
+  });
+
+  expectIdsToEqual(result, [5, 4, 1]);
 });
 
 test('paginates correctly with complex order', async () => {
@@ -154,6 +162,14 @@ test('paginates correctly with complex order', async () => {
   });
 
   expectIdsToEqual(result, [4, 5]);
+
+  result = await Test.paginate({
+    order,
+    limit: 3,
+    before: result.pageInfo.startCursor,
+  });
+
+  expectIdsToEqual(result, [3, 2, 1]);
 });
 
 test('paginates correctly with where', async () => {
