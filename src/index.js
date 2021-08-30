@@ -43,10 +43,12 @@ const withPagination = (options = {}) => (Model) => {
 
     const totalCountQueryOptions = {
       where,
+      ...queryArgs,
     };
 
     const cursorCountQueryOptions = {
       where: paginationWhere,
+      ...queryArgs,
     };
 
     const [instances, totalCount, cursorCount] = await Promise.all([
