@@ -5,7 +5,7 @@
   },
   "name": "sequelize-cursor-pagination",
   "description": "Sequelize model decorator which provides cursor based pagination queries",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "main": "./src/index.js",
   "license": "MIT",
   "repository": {
