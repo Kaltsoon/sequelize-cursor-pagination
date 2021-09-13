@@ -24,7 +24,21 @@ const parseCursor = (cursor) => {
   }
 };
 
+const normalizePrimaryKeyField = (primaryKeyField) => {
+  return Array.isArray(primaryKeyField) ? primaryKeyField : [primaryKeyField];
+};
+
+const ensurePrimaryKeyFieldInOrder = (order, primaryKeyField) => {
+  const missingPrimaryKeyFields = primaryKeyField.filter(
+    (pkField) => !order.find(([field]) => field === pkField),
+  );
+
+  return [...order, ...missingPrimaryKeyFields.map((field) => [field, 'ASC'])];
+};
+
 const normalizeOrder = (order, primaryKeyField) => {
+  const normalizedPrimaryKeyField = normalizePrimaryKeyField(primaryKeyField);
+
   let normalized = [];
 
   if (Array.isArray(order)) {
@@ -43,13 +57,7 @@ const normalizeOrder = (order, primaryKeyField) => {
     });
   }
 
-  const primaryKeyOrder = normalized.find(
-    ([field]) => field === primaryKeyField,
-  );
-
-  return primaryKeyOrder
-    ? normalized
-    : [...normalized, [primaryKeyField, 'ASC']];
+  return ensurePrimaryKeyFieldInOrder(normalized, normalizedPrimaryKeyField);
 };
 
 const reverseOrder = (order) => {

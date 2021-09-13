@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`normalizeOrder returns correct order with composite primary key 1`] = `
+Array [
+  Array [
+    "a",
+    "DESC",
+  ],
+  Array [
+    "pk1",
+    "ASC",
+  ],
+  Array [
+    "pk2",
+    "ASC",
+  ],
+]
+`;
+
+exports[`normalizeOrder returns correct order with different orders 1`] = `
+Array [
+  Array [
+    "a",
+    "ASC",
+  ],
+  Array [
+    "pk",
+    "ASC",
+  ],
+]
+`;
+
+exports[`normalizeOrder returns correct order with different orders 2`] = `
+Array [
+  Array [
+    "a",
+    "DESC",
+  ],
+  Array [
+    "b",
+    "ASC",
+  ],
+  Array [
+    "pk",
+    "ASC",
+  ],
+]
+`;
+
+exports[`normalizeOrder returns correct order with missing order 1`] = `
+Array [
+  Array [
+    "pk",
+    "ASC",
+  ],
+]
+`;
+
+exports[`normalizeOrder returns correct order with primary key in order 1`] = `
+Array [
+  Array [
+    "pk",
+    "DESC",
+  ],
+]
+`;

@@ -43,7 +43,7 @@ withPagination(options)(Counter);
 The `withPagination` function has the following options:
 
 - `methodName`: The name of the pagination method. The default value is `paginate`.
-- `primaryKeyField`: The primary key field of the model. The default value is `id`.
+- `primaryKeyField`: The primary key field of the model. With composite primary key provide an array containing the keys, for example `['key1', 'key2']`. The default value is `'id'`.
 
 Call the `paginate` (the default method name) method:
 
