@@ -1,5 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`normalizeOrder returns correct order when primary key is omitted 1`] = `
+Array [
+  Array [
+    "createdAt",
+    "DESC",
+  ],
+]
+`;
+
 exports[`normalizeOrder returns correct order with composite primary key 1`] = `
 Array [
   Array [

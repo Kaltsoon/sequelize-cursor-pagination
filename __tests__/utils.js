@@ -7,7 +7,7 @@ describe('normalizeOrder', () => {
 
   test('returns correct order when primary key is omitted', () => {
     expect(
-      normalizeOrder([['createdAt'], 'DESC'], 'pk', true),
+      normalizeOrder([['createdAt', 'DESC']], 'pk', true),
     ).toMatchSnapshot();
   });
 
