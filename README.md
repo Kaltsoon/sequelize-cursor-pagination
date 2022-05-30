@@ -44,6 +44,7 @@ The `withPagination` function has the following options:
 
 - `methodName`: The name of the pagination method. The default value is `paginate`.
 - `primaryKeyField`: The primary key field of the model. With composite primary key provide an array containing the keys, for example `['key1', 'key2']`. The default value is `'id'`.
+- `omitPrimaryKeyFromOrder`: By default the primary key is automatically included into the order if it is missing. By setting this option to `true` will override this behavior. The default value is `false`.
 
 Call the `paginate` (the default method name) method:
 

@@ -5,6 +5,12 @@ describe('normalizeOrder', () => {
     expect(normalizeOrder(undefined, 'pk')).toMatchSnapshot();
   });
 
+  test('returns correct order when primary key is omitted', () => {
+    expect(
+      normalizeOrder([['createdAt'], 'DESC'], 'pk', true),
+    ).toMatchSnapshot();
+  });
+
   test('returns correct order with primary key in order', () => {
     expect(normalizeOrder([['pk', 'DESC']], 'pk')).toMatchSnapshot();
   });

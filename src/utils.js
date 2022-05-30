@@ -36,7 +36,7 @@ const ensurePrimaryKeyFieldInOrder = (order, primaryKeyField) => {
   return [...order, ...missingPrimaryKeyFields.map((field) => [field, 'ASC'])];
 };
 
-const normalizeOrder = (order, primaryKeyField) => {
+const normalizeOrder = (order, primaryKeyField, omitPrimaryKeyFromOrder) => {
   const normalizedPrimaryKeyField = normalizePrimaryKeyField(primaryKeyField);
 
   let normalized = [];
@@ -57,7 +57,9 @@ const normalizeOrder = (order, primaryKeyField) => {
     });
   }
 
-  return ensurePrimaryKeyFieldInOrder(normalized, normalizedPrimaryKeyField);
+  return omitPrimaryKeyFromOrder
+    ? normalized
+    : ensurePrimaryKeyFieldInOrder(normalized, normalizedPrimaryKeyField);
 };
 
 const reverseOrder = (order) => {
