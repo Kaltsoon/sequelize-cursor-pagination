@@ -48,9 +48,10 @@ const normalizeOrder = (order, primaryKeyField, omitPrimaryKeyFromOrder) => {
       }
 
       if (Array.isArray(o)) {
-        const [field, direction] = o;
+        const directionValueIndex = o.length - 1;
+        o[directionValueIndex] = o[directionValueIndex] || 'ASC';
 
-        return [field, direction || 'ASC'];
+        return o;
       }
 
       return o;
@@ -63,10 +64,11 @@ const normalizeOrder = (order, primaryKeyField, omitPrimaryKeyFromOrder) => {
 };
 
 const reverseOrder = (order) => {
-  return order.map(([field, direction]) => [
-    field,
-    direction.toLowerCase() === 'desc' ? 'ASC' : 'DESC',
-  ]);
+  return order.map((orderItem) => {
+    orderItem[orderItem.length - 1] =
+      orderItem[orderItem.length - 1].toLowerCase() === 'desc' ? 'ASC' : 'DESC';
+    return orderItem;
+  });
 };
 
 const serializeCursor = (payload) => {
@@ -74,7 +76,18 @@ const serializeCursor = (payload) => {
 };
 
 const createCursor = (instance, order) => {
-  const payload = order.map(([field]) => instance[field]);
+  // order
+  // const fields
+  const payload = order.map((orderItem) => {
+    let field;
+    if (typeof orderItem[0] == 'object') {
+      return instance[orderItem[0]['as']][orderItem[1]];
+    } else {
+      field = orderItem[0];
+    }
+
+    return instance[field];
+  });
 
   return serializeCursor(payload);
 };
@@ -84,24 +97,49 @@ const isValidCursor = (cursor, order) => {
 };
 
 const recursivelyGetPaginationQuery = (order, cursor) => {
-  const currentOp = order[0][1].toLowerCase() === 'desc' ? Op.lt : Op.gt;
+  const directionValueIndex = order[0].length - 1;
+  const currentOp =
+    order[0][directionValueIndex].toLowerCase() === 'desc' ? Op.lt : Op.gt;
+
+  // supporting only below format
+  // [
+  //   { model: Task, as: 'Task' },
+  //   { model: Project, as: 'Project' },
+  //   'createdAt',
+  //   'DESC',
+  // ];
+
+  const _generateColunName = (order) => {
+    // check if we have json object
+
+    if (typeof order[0][0] === 'object') {
+      const name = `${order[0][0]['as']}.${order[0][1]}`;
+      return '$' + name + `$`;
+    } else {
+      return order[0][0];
+    }
+  };
 
   if (order.length === 1) {
+    const key = _generateColunName(order);
+
     return {
-      [order[0][0]]: {
+      [key]: {
         [currentOp]: cursor[0],
       },
     };
   } else {
+    const key = _generateColunName(order);
+
     return {
       [Op.or]: [
         {
-          [order[0][0]]: {
+          [key]: {
             [currentOp]: cursor[0],
           },
         },
         {
-          [order[0][0]]: cursor[0],
+          [key]: cursor[0],
           ...recursivelyGetPaginationQuery(order.slice(1), cursor.slice(1)),
         },
       ],
