@@ -1,6 +1,6 @@
 # ➡️ sequelize-cursor-pagination
 
-![Build status](https://github.com/Kaltsoon/sequelize-cursor-pagination/workflows/test/badge.svg) ![npm](https://img.shields.io/npm/v/sequelize-cursor-pagination)
+[![Test](https://github.com/Kaltsoon/sequelize-cursor-pagination/actions/workflows/test.yml/badge.svg)](https://github.com/Kaltsoon/sequelize-cursor-pagination/actions/workflows/test.yml) [![npm](https://img.shields.io/npm/v/sequelize-cursor-pagination)](https://www.npmjs.com/package/sequelize-cursor-pagination)
 
 Cursor-based pagination queries for Sequelize models. [Some motivation and background](https://dev-blog.apollodata.com/understanding-pagination-rest-graphql-and-relay-b10f835549e7).
 
@@ -129,7 +129,7 @@ export class Counter extends Model<
 
 // ...
 
-Counter = makePaginate(Counter)
+Counter = makePaginate(Counter);
 ```
 
 ## Migrating from version 2
@@ -137,7 +137,6 @@ Counter = makePaginate(Counter)
 The `withPagination` function is deprecated starting from version 3, but the migration is fairly simple.
 
 Version 2:
-
 
 ```js
 const withPagination = require('sequelize-cursor-pagination');
@@ -147,11 +146,10 @@ const Counter = sequelize.define('counter', {
   value: Sequelize.INTEGER,
 });
 
-withPagination({ primaryKeyField: 'id' })(Counter)
+withPagination({ primaryKeyField: 'id' })(Counter);
 ```
 
 Version 3 onwards:
-
 
 ```js
 const { makePaginate } = require('sequelize-cursor-pagination');
