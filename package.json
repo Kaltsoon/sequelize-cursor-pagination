@@ -6,7 +6,7 @@
     "build": "rm -rf build && tsc --project tsconfig.build.json"
   },
   "name": "sequelize-cursor-pagination",
-  "description": "Sequelize model decorator which provides cursor based pagination queries",
+  "description": "Cursor-based pagination queries for Sequelize models",
   "version": "2.4.0",
   "main": "./src/index.js",
   "license": "MIT",

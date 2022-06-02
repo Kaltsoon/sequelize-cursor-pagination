@@ -35,8 +35,8 @@ Counter.paginate = makePaginate(Counter);
 
 The first argument of the `makePaginate` function is the model class. The function also has a second, optional argument, which is the options object. The options object has the following properties:
 
-- `primaryKeyField`: The primary key field of the model. With composite primary key provide an array containing the keys, for example `['key1', 'key2']`. If not provided, the primary key is resolved from the model's attributes (attributes with `primaryKey: true`). This is the decired behavior in most cases.
-- `omitPrimaryKeyFromOrder`: By default the primary key is automatically included into the order if it is missing. By setting this option to `true` will override this behavior. The default value is `false`.
+- `primaryKeyField`: The primary key field of the model. With a composite primary key, provide an array containing the keys, for example `['key1', 'key2']`. If not provided, the primary key is resolved from the model's attributes (attributes with `primaryKey: true`). This is the desired behavior in most cases.
+- `omitPrimaryKeyFromOrder`: By default, the primary key is automatically included in the order if it is missing. Setting this option to `true` will override this behavior. The default value is `false`.
 
 Call the `paginate` method:
 
