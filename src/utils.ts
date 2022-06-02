@@ -1,18 +1,7 @@
-let { Op } = require('sequelize');
+import { Op, ModelStatic, WhereOptions, Model } from 'sequelize';
+import { CursorPayload, OrderConfig } from './types';
 
-if (!Op) {
-  // Support older versions of sequelize
-  Op = {
-    and: '$and',
-    or: '$or',
-    lt: '$lt',
-    lte: '$lte',
-    gt: '$gt',
-    gte: '$gte',
-  };
-}
-
-const parseCursor = (cursor) => {
+export const parseCursor = (cursor: string): CursorPayload | null => {
   if (!cursor) {
     return null;
   }
@@ -24,19 +13,41 @@ const parseCursor = (cursor) => {
   }
 };
 
-const normalizePrimaryKeyField = (primaryKeyField) => {
+export const getPrimaryKeyFields = (model: ModelStatic<any>): string[] => {
+  const primaryKeyFields = Object.entries(model.rawAttributes)
+    .filter(([, attribute]) => attribute.primaryKey)
+    .map(([column]) => column);
+
+  return primaryKeyFields;
+};
+
+const normalizePrimaryKeyField = (
+  primaryKeyField: string | string[],
+): string[] => {
   return Array.isArray(primaryKeyField) ? primaryKeyField : [primaryKeyField];
 };
 
-const ensurePrimaryKeyFieldInOrder = (order, primaryKeyField) => {
+const ensurePrimaryKeyFieldInOrder = (
+  order: OrderConfig,
+  primaryKeyField: string[],
+): OrderConfig => {
   const missingPrimaryKeyFields = primaryKeyField.filter(
     (pkField) => !order.find(([field]) => field === pkField),
   );
 
-  return [...order, ...missingPrimaryKeyFields.map((field) => [field, 'ASC'])];
+  const primaryKeyOrder: OrderConfig = missingPrimaryKeyFields.map((field) => [
+    field,
+    'ASC',
+  ]);
+
+  return [...order, ...primaryKeyOrder];
 };
 
-const normalizeOrder = (order, primaryKeyField, omitPrimaryKeyFromOrder) => {
+export const normalizeOrder = (
+  order: any,
+  primaryKeyField: string | string[],
+  omitPrimaryKeyFromOrder: boolean,
+): OrderConfig => {
   const normalizedPrimaryKeyField = normalizePrimaryKeyField(primaryKeyField);
 
   let normalized = [];
@@ -62,28 +73,34 @@ const normalizeOrder = (order, primaryKeyField, omitPrimaryKeyFromOrder) => {
     : ensurePrimaryKeyFieldInOrder(normalized, normalizedPrimaryKeyField);
 };
 
-const reverseOrder = (order) => {
+export const reverseOrder = (order: OrderConfig): OrderConfig => {
   return order.map(([field, direction]) => [
     field,
     direction.toLowerCase() === 'desc' ? 'ASC' : 'DESC',
   ]);
 };
 
-const serializeCursor = (payload) => {
+const serializeCursor = (payload: CursorPayload): string => {
   return Buffer.from(JSON.stringify(payload)).toString('base64');
 };
 
-const createCursor = (instance, order) => {
-  const payload = order.map(([field]) => instance[field]);
+export const createCursor = <ModelType extends Model>(
+  instance: ModelType,
+  order: OrderConfig,
+): string => {
+  const payload = order.map(([field]) => instance.get(field));
 
   return serializeCursor(payload);
 };
 
-const isValidCursor = (cursor, order) => {
+const isValidCursor = (cursor: CursorPayload, order: OrderConfig): boolean => {
   return cursor.length === order.length;
 };
 
-const recursivelyGetPaginationQuery = (order, cursor) => {
+const recursivelyGetPaginationQuery = (
+  order: OrderConfig,
+  cursor: CursorPayload,
+): WhereOptions<any> => {
   const currentOp = order[0][1].toLowerCase() === 'desc' ? Op.lt : Op.gt;
 
   if (order.length === 1) {
@@ -109,21 +126,13 @@ const recursivelyGetPaginationQuery = (order, cursor) => {
   }
 };
 
-const getPaginationQuery = (order, cursor) => {
+export const getPaginationQuery = (
+  order: OrderConfig,
+  cursor: CursorPayload,
+): WhereOptions<any> | null => {
   if (!isValidCursor(cursor, order)) {
     return null;
   }
 
   return recursivelyGetPaginationQuery(order, cursor);
-};
-
-module.exports = {
-  Op,
-  parseCursor,
-  serializeCursor,
-  normalizeOrder,
-  isValidCursor,
-  getPaginationQuery,
-  createCursor,
-  reverseOrder,
 };

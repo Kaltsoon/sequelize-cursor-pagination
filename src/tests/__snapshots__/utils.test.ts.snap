@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`normalizeOrder returns correct order when primary key is omitted 1`] = `
+exports[`utils normalizeOrder returns correct order when primary key is omitted 1`] = `
 Array [
   Array [
     "createdAt",
@@ -9,7 +9,7 @@ Array [
 ]
 `;
 
-exports[`normalizeOrder returns correct order with composite primary key 1`] = `
+exports[`utils normalizeOrder returns correct order with composite primary key 1`] = `
 Array [
   Array [
     "a",
@@ -26,7 +26,7 @@ Array [
 ]
 `;
 
-exports[`normalizeOrder returns correct order with different orders 1`] = `
+exports[`utils normalizeOrder returns correct order with different orders 1`] = `
 Array [
   Array [
     "a",
@@ -39,7 +39,7 @@ Array [
 ]
 `;
 
-exports[`normalizeOrder returns correct order with different orders 2`] = `
+exports[`utils normalizeOrder returns correct order with different orders 2`] = `
 Array [
   Array [
     "a",
@@ -56,7 +56,7 @@ Array [
 ]
 `;
 
-exports[`normalizeOrder returns correct order with missing order 1`] = `
+exports[`utils normalizeOrder returns correct order with missing order 1`] = `
 Array [
   Array [
     "pk",
@@ -65,7 +65,7 @@ Array [
 ]
 `;
 
-exports[`normalizeOrder returns correct order with primary key in order 1`] = `
+exports[`utils normalizeOrder returns correct order with primary key in order 1`] = `
 Array [
   Array [
     "pk",

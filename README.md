@@ -1,8 +1,8 @@
-![npm](https://img.shields.io/npm/v/sequelize-cursor-pagination) ![Build status](https://github.com/Kaltsoon/sequelize-cursor-pagination/workflows/CI/badge.svg)
+# ➡️ sequelize-cursor-pagination
 
-# Sequelize Cursor Pagination
+![Build status](https://github.com/Kaltsoon/sequelize-cursor-pagination/workflows/test/badge.svg) ![npm](https://img.shields.io/npm/v/sequelize-cursor-pagination)
 
-Sequelize model decorator which provides cursor-based pagination queries. [Some motivation and background](https://dev-blog.apollodata.com/understanding-pagination-rest-graphql-and-relay-b10f835549e7).
+Cursor-based pagination queries for Sequelize models. [Some motivation and background](https://dev-blog.apollodata.com/understanding-pagination-rest-graphql-and-relay-b10f835549e7).
 
 ## Install
 
@@ -12,7 +12,7 @@ With npm:
 npm install sequelize-cursor-pagination
 ```
 
-Or with Yarn:
+With Yarn:
 
 ```bash
 yarn add sequelize-cursor-pagination
@@ -20,33 +20,25 @@ yarn add sequelize-cursor-pagination
 
 ## How to use?
 
-Define a Sequelize model and decorate it with the `withPagination` decorator:
+Define a static pagination method for a Sequelize model with the `makePaginate` function:
 
 ```javascript
-// ...
-
-const withPagination = require('sequelize-cursor-pagination');
+const { makePaginate } = require('sequelize-cursor-pagination');
 
 const Counter = sequelize.define('counter', {
   id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
   value: Sequelize.INTEGER,
 });
 
-const options = {
-  methodName: 'paginate',
-  primaryKeyField: 'id',
-};
-
-withPagination(options)(Counter);
+Counter.paginate = makePaginate(Counter);
 ```
 
-The `withPagination` function has the following options:
+The first argument of the `makePaginate` function is the model class. The function also has a second, optional argument, which is the options object. The options object has the following properties:
 
-- `methodName`: The name of the pagination method. The default value is `paginate`.
-- `primaryKeyField`: The primary key field of the model. With composite primary key provide an array containing the keys, for example `['key1', 'key2']`. The default value is `'id'`.
+- `primaryKeyField`: The primary key field of the model. With composite primary key provide an array containing the keys, for example `['key1', 'key2']`. If not provided, the primary key is resolved from the model's attributes (attributes with `primaryKey: true`). This is the decired behavior in most cases.
 - `omitPrimaryKeyFromOrder`: By default the primary key is automatically included into the order if it is missing. By setting this option to `true` will override this behavior. The default value is `false`.
 
-Call the `paginate` (the default method name) method:
+Call the `paginate` method:
 
 ```javascript
 const result = await Counter.paginate({
@@ -110,8 +102,64 @@ const thirdResult = await Counter.paginate({
 });
 ```
 
-## Running tests
+## TypeScript
 
+The library is written in TypeScript, so types are on the house!
+
+If you are using a static method like in the previous examples, just declare the method on your model class:
+
+```ts
+import {
+  PaginateOptions,
+  PaginationConnection,
+  makePaginate,
+} from 'sequelize-cursor-pagination';
+
+export class Counter extends Model<
+  InferAttributes<Counter>,
+  InferCreationAttributes<Counter>
+> {
+  declare id: CreationOptional<number>;
+  declare value: number;
+
+  declare static paginate: (
+    options: PaginateOptions<Counter>,
+  ) => Promise<PaginationConnection<Counter>>;
+}
+
+// ...
+
+Counter = makePaginate(Counter)
 ```
-npm run test
+
+## Migrating from version 2
+
+The `withPagination` function is deprecated starting from version 3, but the migration is fairly simple.
+
+Version 2:
+
+
+```js
+const withPagination = require('sequelize-cursor-pagination');
+
+const Counter = sequelize.define('counter', {
+  id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+  value: Sequelize.INTEGER,
+});
+
+withPagination({ primaryKeyField: 'id' })(Counter)
+```
+
+Version 3 onwards:
+
+
+```js
+const { makePaginate } = require('sequelize-cursor-pagination');
+
+const Counter = sequelize.define('counter', {
+  id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
+  value: Sequelize.INTEGER,
+});
+
+Counter.paginate = makePaginate(Counter);
 ```
