@@ -8,7 +8,7 @@
   "name": "sequelize-cursor-pagination",
   "description": "Cursor-based pagination queries for Sequelize models",
   "version": "3.0.1",
-  "main": "./src/index.js",
+  "main": "index.js",
   "license": "MIT",
   "repository": {
     "type": "git",
