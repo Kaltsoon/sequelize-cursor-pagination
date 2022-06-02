@@ -109,7 +109,7 @@ const recursivelyGetPaginationQuery = (order, cursor) => {
   //   'DESC',
   // ];
 
-  const _generateColunName = (order) => {
+  const _getColumnName = (order) => {
     // check if we have json object
 
     if (typeof order[0][0] === 'object') {
@@ -121,7 +121,7 @@ const recursivelyGetPaginationQuery = (order, cursor) => {
   };
 
   if (order.length === 1) {
-    const key = _generateColunName(order);
+    const key = _getColumnName(order);
 
     return {
       [key]: {
@@ -129,7 +129,7 @@ const recursivelyGetPaginationQuery = (order, cursor) => {
       },
     };
   } else {
-    const key = _generateColunName(order);
+    const key = _getColumnName(order);
 
     return {
       [Op.or]: [
