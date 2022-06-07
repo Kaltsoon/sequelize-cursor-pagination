@@ -129,7 +129,7 @@ export class Counter extends Model<
 
 // ...
 
-Counter = makePaginate(Counter);
+Counter.paginate = makePaginate(Counter);
 ```
 
 ## Migrating from version 2
