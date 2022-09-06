@@ -37,6 +37,21 @@ describe('utils', () => {
         ),
       ).toMatchSnapshot();
     });
+
+    it('returns correct order with different orders with nulls first', () => {
+      expect(normalizeOrder(['a'], 'pk', false)).toMatchSnapshot();
+
+      expect(
+        normalizeOrder(
+          [
+            ['a', 'DESC NULLS FIRST'],
+            ['b', 'ASC'],
+          ],
+          'pk',
+          false,
+        ),
+      ).toMatchSnapshot();
+    });
   });
 
   describe('getPrimaryKeyFields', () => {
