@@ -56,6 +56,36 @@ Array [
 ]
 `;
 
+exports[`utils normalizeOrder returns correct order with different orders with nulls first 1`] = `
+Array [
+  Array [
+    "a",
+    "ASC",
+  ],
+  Array [
+    "pk",
+    "ASC",
+  ],
+]
+`;
+
+exports[`utils normalizeOrder returns correct order with different orders with nulls first 2`] = `
+Array [
+  Array [
+    "a",
+    "DESC NULLS FIRST",
+  ],
+  Array [
+    "b",
+    "ASC",
+  ],
+  Array [
+    "pk",
+    "ASC",
+  ],
+]
+`;
+
 exports[`utils normalizeOrder returns correct order with missing order 1`] = `
 Array [
   Array [
