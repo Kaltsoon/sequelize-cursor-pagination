@@ -76,7 +76,7 @@ export const normalizeOrder = (
 export const reverseOrder = (order: OrderConfig): OrderConfig => {
   return order.map(([field, direction]) => [
     field,
-    direction.toLowerCase().split(" ")[0]  === 'desc' ? 'ASC' : 'DESC',
+    direction.toLowerCase().split(' ')[0]  === 'desc' ? 'ASC' : 'DESC',
   ]);
 };
 
@@ -101,7 +101,7 @@ const recursivelyGetPaginationQuery = (
   order: OrderConfig,
   cursor: CursorPayload,
 ): WhereOptions<any> => {
-  const currentOp = order[0][1].toLowerCase().split(" ")[0] === 'desc' ? Op.lt : Op.gt;
+  const currentOp = order[0][1].toLowerCase().split(' ')[0] === 'desc' ? Op.lt : Op.gt;
 
   if (order.length === 1) {
     return {
