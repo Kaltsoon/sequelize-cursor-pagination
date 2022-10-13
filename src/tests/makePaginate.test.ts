@@ -163,6 +163,22 @@ describe('makePaginate', () => {
     expect(result.totalCount).toBe(3);
   });
 
+  it('paginates correctly with a scope', async () => {
+    await generateTestData();
+
+    const order: OrderConfig = [['counter', 'ASC']];
+
+    const result = await (
+      Counter.scope({ method: ['extra', 3] }) as typeof Counter
+    ).paginate({
+      order,
+      limit: 5,
+    });
+
+    expectIdsToEqual(result, [5, 4, 3]);
+    expect(result.totalCount).toBe(3);
+  });
+
   it('paginates correctly with different order formats', async () => {
     await generateTestData();
 
@@ -180,5 +196,31 @@ describe('makePaginate', () => {
     result = await Counter.paginate({ order: [['counter', 'desc']], limit: 5 });
 
     expectIdsToEqual(result, [2, 3, 1, 4, 5]);
+  });
+
+  it('paginates correctly with simple order', async () => {
+    await generateTestData();
+
+    const order: OrderConfig = [['counter', 'ASC']];
+
+    let result = await Counter.paginate({ order, limit: 3 });
+
+    expectIdsToEqual(result, [5, 4, 1]);
+
+    result = await Counter.paginate({
+      order,
+      limit: 3,
+      after: result.pageInfo.endCursor as string,
+    });
+
+    expectIdsToEqual(result, [2, 3]);
+
+    result = await Counter.paginate({
+      order,
+      limit: 3,
+      before: result.pageInfo.startCursor as string,
+    });
+
+    expectIdsToEqual(result, [5, 4, 1]);
   });
 });

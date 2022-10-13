@@ -24,9 +24,10 @@ const makePaginate = <ModelType extends Model>(
 
   const omitPrimaryKeyFromOrder = options?.omitPrimaryKeyFromOrder ?? false;
 
-  const paginate = async (
+  const paginate = async function paginate (
+    this: ModelStatic<ModelType>,
     queryOptions: PaginateOptions<ModelType>,
-  ): Promise<PaginationConnection<ModelType>> => {
+  ): Promise<PaginationConnection<ModelType>> {
     const {
       order: orderOption,
       where,
@@ -74,9 +75,9 @@ const makePaginate = <ModelType extends Model>(
     };
 
     const [instances, totalCount, cursorCount] = await Promise.all([
-      model.findAll(paginationQueryOptions),
-      model.count(totalCountQueryOptions),
-      model.count(cursorCountQueryOptions),
+      this.findAll(paginationQueryOptions),
+      this.count(totalCountQueryOptions),
+      this.count(cursorCountQueryOptions),
     ]);
 
     if (before) {
