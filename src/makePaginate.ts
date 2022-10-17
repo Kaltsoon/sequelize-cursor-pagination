@@ -7,6 +7,7 @@ import {
   getPaginationQuery,
   reverseOrder,
   getPrimaryKeyFields,
+  isModelClass,
 } from './utils';
 
 import {
@@ -24,9 +25,12 @@ const makePaginate = <ModelType extends Model>(
 
   const omitPrimaryKeyFromOrder = options?.omitPrimaryKeyFromOrder ?? false;
 
-  const paginate = async (
+  async function paginate (
+    this: unknown,
     queryOptions: PaginateOptions<ModelType>,
-  ): Promise<PaginationConnection<ModelType>> => {
+  ): Promise<PaginationConnection<ModelType>> {
+    const modelClass: ModelStatic<ModelType> = isModelClass(this) ? this : model;
+
     const {
       order: orderOption,
       where,
@@ -74,9 +78,9 @@ const makePaginate = <ModelType extends Model>(
     };
 
     const [instances, totalCount, cursorCount] = await Promise.all([
-      model.findAll(paginationQueryOptions),
-      model.count(totalCountQueryOptions),
-      model.count(cursorCountQueryOptions),
+      modelClass.findAll(paginationQueryOptions),
+      modelClass.count(totalCountQueryOptions),
+      modelClass.count(cursorCountQueryOptions),
     ]);
 
     if (before) {

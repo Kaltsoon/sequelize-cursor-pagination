@@ -30,5 +30,13 @@ Counter.init(
     counter: { type: DataTypes.INTEGER },
     extra: { type: DataTypes.INTEGER },
   },
-  { tableName: 'counters', sequelize },
+  {
+    tableName: 'counters',
+    sequelize,
+    scopes: {
+      extra(extra: number) {
+        return { where: { extra } };
+      },
+    },
+  },
 );

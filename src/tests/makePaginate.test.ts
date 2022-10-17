@@ -34,6 +34,16 @@ describe('makePaginate', () => {
     await sequelize.sync({ force: true });
   });
 
+  it('paginates correctly without static method', async () => {
+    await generateTestData();
+
+    const paginate = makePaginate(Counter);
+
+    const result = await paginate({ limit: 2 });
+
+    expectIdsToEqual(result, [1, 2]);
+  });
+
   it('paginates correctly with after cursor', async () => {
     await generateTestData();
 
@@ -180,5 +190,21 @@ describe('makePaginate', () => {
     result = await Counter.paginate({ order: [['counter', 'desc']], limit: 5 });
 
     expectIdsToEqual(result, [2, 3, 1, 4, 5]);
+  });
+
+  it('paginates correctly with a scope', async () => {
+    await generateTestData();
+
+    const order: OrderConfig = [['counter', 'ASC']];
+
+    const result = await (
+      Counter.scope({ method: ['extra', 3] }) as typeof Counter
+    ).paginate({
+      order,
+      limit: 5,
+    });
+
+    expectIdsToEqual(result, [5, 4, 3]);
+    expect(result.totalCount).toBe(3);
   });
 });
