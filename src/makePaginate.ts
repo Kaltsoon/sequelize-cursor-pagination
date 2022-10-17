@@ -25,11 +25,13 @@ const makePaginate = <ModelType extends Model>(
 
   const omitPrimaryKeyFromOrder = options?.omitPrimaryKeyFromOrder ?? false;
 
-  async function paginate (
+  async function paginate(
     this: unknown,
     queryOptions: PaginateOptions<ModelType>,
   ): Promise<PaginationConnection<ModelType>> {
-    const modelClass: ModelStatic<ModelType> = isModelClass(this) ? this : model;
+    const modelClass: ModelStatic<ModelType> = isModelClass(this)
+      ? this
+      : model;
 
     const {
       order: orderOption,
@@ -114,7 +116,7 @@ const makePaginate = <ModelType extends Model>(
       edges,
       pageInfo,
     };
-  };
+  }
 
   return paginate;
 };
