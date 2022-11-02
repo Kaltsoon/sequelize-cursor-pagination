@@ -8,6 +8,7 @@ import {
   reverseOrder,
   getPrimaryKeyFields,
   isModelClass,
+  getCount,
 } from './utils';
 
 import {
@@ -81,8 +82,8 @@ const makePaginate = <ModelType extends Model>(
 
     const [instances, totalCount, cursorCount] = await Promise.all([
       modelClass.findAll(paginationQueryOptions),
-      modelClass.count(totalCountQueryOptions),
-      modelClass.count(cursorCountQueryOptions),
+      getCount(modelClass, totalCountQueryOptions),
+      getCount(modelClass, cursorCountQueryOptions),
     ]);
 
     if (before) {

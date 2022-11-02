@@ -1,4 +1,4 @@
-import { Op, ModelStatic, WhereOptions, Model } from 'sequelize';
+import { Op, ModelStatic, WhereOptions, Model, CountOptions } from 'sequelize';
 import { CursorPayload, OrderConfig } from './types';
 
 export const parseCursor = (cursor: string): CursorPayload | null => {
@@ -140,4 +140,18 @@ export const getPaginationQuery = (
 
 export const isModelClass = (value: unknown): value is ModelStatic<any> => {
   return typeof value === 'function' && value.prototype instanceof Model;
+};
+
+export const getCount = async (
+  model: ModelStatic<any>,
+  query: CountOptions<any>,
+): Promise<number> => {
+  const countPayload = await model.count(query);
+
+  // count with group by query returns an array
+  if (Array.isArray(countPayload)) {
+    return countPayload.length;
+  }
+
+  return countPayload;
 };

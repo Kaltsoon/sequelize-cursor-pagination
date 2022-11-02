@@ -207,4 +207,13 @@ describe('makePaginate', () => {
     expectIdsToEqual(result, [5, 4, 3]);
     expect(result.totalCount).toBe(3);
   });
+
+  it('paginates correctly with group by', async () => {
+    await generateTestData();
+
+    const result = await Counter.paginate({ group: 'extra' });
+
+    expectIdsToEqual(result, [1, 3]);
+    expect(result.totalCount).toBe(2);
+  });
 });
