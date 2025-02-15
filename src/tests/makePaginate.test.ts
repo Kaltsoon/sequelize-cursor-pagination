@@ -1,6 +1,6 @@
 import { sequelize, Counter } from './models';
 import { OrderConfig } from '../types';
-import makePaginate from '../makePaginate';
+import makePaginate, { makePaginateLazy } from '../makePaginate';
 
 const expectCorrectPageInfoCursors = (result: any) => {
   expect(typeof result.pageInfo.startCursor === 'string').toBe(true);
@@ -28,9 +28,11 @@ const generateTestData = () => {
 };
 
 Counter.paginate = makePaginate(Counter);
+Counter.paginateLazy = makePaginateLazy(Counter);
 
 describe('makePaginate', () => {
   beforeEach(async () => {
+    jest.restoreAllMocks();
     await sequelize.sync({ force: true });
   });
 
@@ -216,4 +218,67 @@ describe('makePaginate', () => {
     expectIdsToEqual(result, [1, 3]);
     expect(result.totalCount).toBe(2);
   });
+
+  it('no unnecessary database queries are performed', async () => {
+    jest.spyOn(Counter, 'findAll');
+    jest.spyOn(Counter, 'count');
+
+    await generateTestData();
+
+    await Counter.paginate({ limit: 2 });
+
+    expect(Counter.findAll).toHaveBeenCalledTimes(1);
+    expect(Counter.count).toHaveBeenCalledTimes(2);
+  });
 });
+
+describe('makeLazyPaginate', () => {
+  beforeEach(async () => {
+    jest.restoreAllMocks();
+    await sequelize.sync({ force: true });
+  });
+
+  it('paginates correctly', async () => {
+    await generateTestData();
+
+    const connection = Counter.paginateLazy({ limit: 2 });
+    const result = await Counter.paginate({ limit: 2 });
+
+    const edges = await connection.getEdges();
+    const pageInfo = await connection.getPageInfo();
+    const totalCount = await connection.getTotalCount();
+
+    expect(edges).toEqual(result.edges);
+    expect(pageInfo).toEqual(result.pageInfo);
+    expect(totalCount).toEqual(result.totalCount);
+  });
+
+  it('no unnecessary database queries are performed', async () => {
+    jest.spyOn(Counter, 'findAll');
+    jest.spyOn(Counter, 'count');
+
+    await generateTestData();
+
+    const connection = Counter.paginateLazy({ limit: 2 });
+
+    await connection.getEdges();
+
+    expect(Counter.findAll).toHaveBeenCalledTimes(1);
+    expect(Counter.count).not.toHaveBeenCalled();
+
+    await connection.getTotalCount();
+
+    expect(Counter.findAll).toHaveBeenCalledTimes(1);
+    expect(Counter.count).toHaveBeenCalledTimes(1);
+
+    await connection.getPageInfo();
+
+    expect(Counter.findAll).toHaveBeenCalledTimes(1);
+    expect(Counter.count).toHaveBeenCalledTimes(2);
+
+    await connection.getEdges();
+
+    expect(Counter.findAll).toHaveBeenCalledTimes(1);
+  });
+});
+

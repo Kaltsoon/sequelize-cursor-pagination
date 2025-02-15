@@ -8,6 +8,7 @@ import {
 } from 'sequelize';
 
 import { PaginateOptions, PaginationConnection } from '../types';
+import LazyPaginationConnection from '../LazyPaginationConnection';
 
 export const sequelize = new Sequelize('sqlite::memory:');
 
@@ -22,6 +23,10 @@ export class Counter extends Model<
   declare static paginate: (
     options: PaginateOptions<Counter>,
   ) => Promise<PaginationConnection<Counter>>;
+
+  declare static paginateLazy: (
+    options: PaginateOptions<Counter>,
+  ) => LazyPaginationConnection<Counter>;
 }
 
 Counter.init(
