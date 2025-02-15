@@ -107,7 +107,7 @@ const thirdResult = await Counter.paginate({
 One pagination operation (including `edges`, `totalCount` and `pageInfo`) requires three database queries, but if you are only insterested in the `edges`, one database query is enough. The `makePaginateLazy` function can be used to create a "lazy evaluation" version of the `paginate` function. With this version, the `paginateLazy` function returns a `LazyPaginationConnection` object, containing methods `getEdges`, `getTotalCount`, and `getPageInfo`. These methods can be used to fetch the edges, total count, and page info, respectively:
 
 ```javascript
-import { makePaginateLazy } from 'sequelize-cursor-pagination';
+const { makePaginateLazy } = require('sequelize-cursor-pagination');
 
 Counter.paginateLazy = makePaginateLazy(Counter);
 
