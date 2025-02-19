@@ -109,6 +109,7 @@ One pagination operation (including `edges`, `totalCount` and `pageInfo`) requir
 ```javascript
 const { makePaginateLazy } = require('sequelize-cursor-pagination');
 
+// Same options are supported as with the makePaginate function
 Counter.paginateLazy = makePaginateLazy(Counter);
 
 // Same options are supported as with the regular paginate function
@@ -137,6 +138,7 @@ import {
   PaginateOptions,
   PaginationConnection,
   makePaginate,
+  LazyPaginationConnection,
 } from 'sequelize-cursor-pagination';
 
 export class Counter extends Model<
