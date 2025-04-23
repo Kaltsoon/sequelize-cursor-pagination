@@ -230,6 +230,20 @@ describe('makePaginate', () => {
     expect(Counter.findAll).toHaveBeenCalledTimes(1);
     expect(Counter.count).toHaveBeenCalledTimes(2);
   });
+
+  it('paginates correctly with attributes', async () => {
+    await generateTestData();
+
+    const paginate = makePaginate(Counter);
+
+    const result = await paginate({ limit: 2, attributes: ['id', 'counter'] });
+    const nodes = result.edges.map(({ node }) => node.dataValues);
+
+    expect(nodes).toEqual([
+      { id: 1, counter: 3 },
+      { id: 2, counter: 4 },
+    ]);
+  });
 });
 
 describe('makeLazyPaginate', () => {
@@ -281,4 +295,3 @@ describe('makeLazyPaginate', () => {
     expect(Counter.findAll).toHaveBeenCalledTimes(1);
   });
 });
-

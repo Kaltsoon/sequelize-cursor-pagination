@@ -36,6 +36,7 @@ function getLazyPaginationConnection<ModelType extends Model>(
     after,
     before,
     limit,
+    attributes,
     ...restQueryOptions
   } = paginateOptions;
 
@@ -63,6 +64,7 @@ function getLazyPaginationConnection<ModelType extends Model>(
     where: paginationWhere,
     limit,
     order,
+    attributes,
     ...restQueryOptions,
   };
 
