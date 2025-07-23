@@ -2,7 +2,7 @@
 
 [![Test](https://github.com/Kaltsoon/sequelize-cursor-pagination/actions/workflows/test.yml/badge.svg)](https://github.com/Kaltsoon/sequelize-cursor-pagination/actions/workflows/test.yml) [![npm](https://img.shields.io/npm/v/sequelize-cursor-pagination)](https://www.npmjs.com/package/sequelize-cursor-pagination)
 
-Cursor-based pagination queries for Sequelize models. [Some motivation and background](https://dev-blog.apollodata.com/understanding-pagination-rest-graphql-and-relay-b10f835549e7).
+Cursor-based pagination queries for Sequelize models. [Some motivation and background](https://ignaciochiazzo.medium.com/paginating-requests-in-apis-d4883d4c1c4c).
 
 ## Install
 
