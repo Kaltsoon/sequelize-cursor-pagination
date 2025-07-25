@@ -191,3 +191,7 @@ const Counter = sequelize.define('counter', {
 
 Counter.paginate = makePaginate(Counter);
 ```
+
+## License
+
+[MIT](./LICENSE)
